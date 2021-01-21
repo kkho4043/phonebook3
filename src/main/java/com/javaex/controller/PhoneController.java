@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,14 +27,14 @@ public class PhoneController {
 		model.addAttribute("pList",personVo);
 		
 		
-		return "/WEB-INF/views/list.jsp";
+		return "list";
 	}
 	
 	@RequestMapping(value = "writeForm",method = {RequestMethod.GET,RequestMethod.POST})
 	public String wtireForm() {
 		System.out.println("writeForm");
 		
-		return "/WEB-INF/views/writeForm.jsp";
+		return "writeForm";
 	}
 	
 	@RequestMapping(value = "write",method = {RequestMethod.GET,RequestMethod.POST})
@@ -51,30 +53,23 @@ public class PhoneController {
 		return "redirect:/phone/list";
 	}
 	
-	@RequestMapping(value = "modifyForm",method = {RequestMethod.GET,RequestMethod.POST})
-	public String modifyForm(@RequestParam("personId") String personId,Model model) {
-		
-		System.out.println("modify");
-		System.out.println(personId);
-		int pId = Integer.parseInt(personId);
-		
-		
+	@RequestMapping(value = "/modifyForm",method = {RequestMethod.GET,RequestMethod.POST})
+	public String modifyForm(@RequestParam("personId") int pId,Model model) {
+			
 		PersonVo personVo = new PersonVo();
 		PhoneDao phoneDao = new PhoneDao();
 		personVo = phoneDao.getPerson(pId);
 		System.out.println(personVo.toString());
 		model.addAttribute("pList",personVo);
-		return "/WEB-INF/views/modifyForm.jsp";
+		return "modifyForm";
 	}
 	
-	@RequestMapping(value = "modify",method = {RequestMethod.GET,RequestMethod.POST})
-	public String modify(@RequestParam("personId") String personId,
-						 @RequestParam("name") String name,
-						 @RequestParam("hp") String hp,
-						 @RequestParam("company") String company) {
-		
-		
-		int pId = Integer.parseInt(personId);
+	@RequestMapping(value = "/modify2",method = {RequestMethod.GET,RequestMethod.POST})
+	public String modify2(@RequestParam("personId") int pId,
+						  @RequestParam("name") String name,
+						  @RequestParam("hp") String hp,
+						  @RequestParam("company") String company) {
+	
 		
 		PersonVo personVo = new PersonVo(pId,name,hp,company);
 		
@@ -83,12 +78,18 @@ public class PhoneController {
 		return "redirect:/phone/list";
 	}
 	
-	@RequestMapping(value = "delete",method = {RequestMethod.GET,RequestMethod.POST})
-	public String delete(@RequestParam("personId") String personId) {
+	
+	@RequestMapping(value = "/modify",method = {RequestMethod.GET,RequestMethod.POST})
+	public String modify(@ModelAttribute PersonVo personVo) {
+	
+		PhoneDao phoneDao = new PhoneDao();
+		phoneDao.personUpdate(personVo);
+		return "redirect:/phone/list";
 		
-		System.out.println("modify");
-		System.out.println(personId);
-		int pId = Integer.parseInt(personId);
+	}
+	
+	@RequestMapping(value = "/delete/{personId}",method = {RequestMethod.GET,RequestMethod.POST})
+	public String delete(@PathVariable("personId") int pId) {
 		
 		PhoneDao phoneDao = new PhoneDao();
 		phoneDao.parsonDelete(pId);
@@ -96,6 +97,16 @@ public class PhoneController {
 		
 		return "redirect:/phone/list";
 	}
+	@RequestMapping(value = "/delete",method = {RequestMethod.GET,RequestMethod.POST})
+	public String delete2(@RequestParam("personId") int pId) {
+		
+		PhoneDao phoneDao = new PhoneDao();
+		phoneDao.parsonDelete(pId);
+		
+		
+		return "redirect:/phone/list";
+	}
+	
 	
 	
 }

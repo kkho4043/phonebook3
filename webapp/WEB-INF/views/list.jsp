@@ -33,8 +33,8 @@
 			<td>${personVo.company}</td>
 		</tr>
 		<tr>
-			<td><a href="delete?personId=${personVo.personId}">(삭제)</a></td>
-			<td><a href="modifyForm?personId=${personVo.personId}"> (변경)</a></td>
+			<td><a href="/phonebook3/phone/delete/${personVo.personId}">(삭제)</a></td>
+			<td><a href="/phonebook3/phone/modifyForm?personId=${personVo.personId}"> (변경)</a></td>
 		</tr>
 	
 	</table>
